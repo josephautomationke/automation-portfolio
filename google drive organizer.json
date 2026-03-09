@@ -1,0 +1,537 @@
+{
+  "name": "leads",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "11FA2DARH4CwwjRCpsZj59wXgtkwsSph3",
+          "mode": "list",
+          "cachedResultName": "00_INBOX",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/11FA2DARH4CwwjRCpsZj59wXgtkwsSph3"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        208
+      ],
+      "id": "607c97be-496d-4a93-b492-a1d58f33e665",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "12dpsu5i5BmpiViXUUFDP_OSwuntb3oXu",
+          "mode": "list",
+          "cachedResultName": "07_Pdf",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/12dpsu5i5BmpiViXUUFDP_OSwuntb3oXu"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -240,
+        112
+      ],
+      "id": "ca700db3-9875-41cc-a8bb-231e066bb1d7",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1aNLv_m-bGWjutc4y1RZ1KXr1sxVutC7U",
+          "mode": "list",
+          "cachedResultName": "02_Images",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1aNLv_m-bGWjutc4y1RZ1KXr1sxVutC7U"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        208
+      ],
+      "id": "dabbb680-c8a9-44e8-990b-76cbaa62b5c8",
+      "name": "Move file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cb228a13-973f-4685-a4a8-93eaf844a273",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -464,
+        208
+      ],
+      "id": "8365fd34-33de-4f5c-b514-8886433c818b",
+      "name": "pdf "
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d1e07f18-6b75-48e2-aff9-a383d214f611",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "Image",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -240,
+        304
+      ],
+      "id": "1017bf7a-b387-4ae7-907f-fd5b4c2f835f",
+      "name": "Image"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1PlGN0pCiAchjHLnInmaM6tpZbpHDzjLy",
+          "mode": "list",
+          "cachedResultName": "01_Videos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1PlGN0pCiAchjHLnInmaM6tpZbpHDzjLy"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        192,
+        304
+      ],
+      "id": "a3252365-6f01-4795-a8cc-fc6158c5db0c",
+      "name": "Move file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7896d34e-3789-4b3b-bdaa-c3e8d076ff23",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "Video",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -16,
+        400
+      ],
+      "id": "8a83c4a4-cf24-4eb9-9000-eda5202c1adf",
+      "name": "videos"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "15JosGptxr4_ujTA60aVIp3UMLidaeqEY",
+          "mode": "list",
+          "cachedResultName": "05_Audio",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/15JosGptxr4_ujTA60aVIp3UMLidaeqEY"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        400
+      ],
+      "id": "bf4de7b1-a773-44d1-abb4-974ca83392f4",
+      "name": "Move file3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1wuqLiSczDzV7A0lKrtuDiCMRRkYYPq6E",
+          "mode": "list",
+          "cachedResultName": "03_Docx",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1wuqLiSczDzV7A0lKrtuDiCMRRkYYPq6E"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        608,
+        496
+      ],
+      "id": "7f7c96b6-6601-4570-ab99-4b0dc604863c",
+      "name": "Move file4",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1691c02a-ae09-4e90-a4b0-b8a3a3f55136",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "Audio",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        192,
+        496
+      ],
+      "id": "e1b3d534-6386-40c0-822e-809d0b3c3785",
+      "name": "Audio"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3a194b1f-af01-4a4f-bc2c-61f12fa9bb99",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "Doc",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        400,
+        592
+      ],
+      "id": "790c392a-a6ff-452b-8dc7-f998b9637ff7",
+      "name": "docx"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1XxZYXFjiNZkTukZHJ_EjFG2jmqmr1S9I",
+          "mode": "list",
+          "cachedResultName": "06_Others",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1XxZYXFjiNZkTukZHJ_EjFG2jmqmr1S9I"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        608,
+        688
+      ],
+      "id": "82470df6-02a1-496a-8251-828a7be5e451",
+      "name": "others",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YdxZbjqqPx0m6bvK",
+          "name": "Google Drive account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "pdf ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdf ": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image": {
+      "main": [
+        [
+          {
+            "node": "Move file1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "videos": {
+      "main": [
+        [
+          {
+            "node": "Move file2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio": {
+      "main": [
+        [
+          {
+            "node": "Move file3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "docx",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "docx": {
+      "main": [
+        [
+          {
+            "node": "Move file4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "others",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "a0e8ad33-3cb0-47ff-aa1b-8c4790e35f29",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c571e24ec810276817669e29f8bec76845fa343d2302c2c6832863520d81eac4"
+  },
+  "id": "UhsQTm4eXND6Ee5nNal9o",
+  "tags": []
+}

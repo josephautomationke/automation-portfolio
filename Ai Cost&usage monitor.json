@@ -1,0 +1,307 @@
+{
+  "name": "Ai Cost&usage monitor",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -96
+      ],
+      "id": "4212afb4-4d53-4b88-8b5c-4898a7c6f65a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Summarize this in one sentence:\n\"AI automation reduces operational costs in businesses.\""
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        -96
+      ],
+      "id": "b54ea713-4fc7-426d-90c7-840bdf56b714",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yOBN7xL0XltuowfE",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7837cf4f-65db-4c26-a092-3796249bdeee",
+              "name": "total_tokens",
+              "value": "={{\nMath.ceil(\n  ($json.output?.[0]?.content?.[0]?.text?.length || 0) / 4\n)\n}}",
+              "type": "number"
+            },
+            {
+              "id": "63e6df52-cdbc-42a1-b23e-58454d787f59",
+              "name": "estimated_cost",
+              "value": "={{ $json.total_tokens * 0.002 / 1000 }}\n",
+              "type": "number"
+            },
+            {
+              "id": "9570975c-000b-4af5-8a0a-ea5779941e09",
+              "name": "timestamp",
+              "value": "={{new Date().toISOString()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        -96
+      ],
+      "id": "cbd0594d-82b7-4a5e-9b08-84e2b0ba0df3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7d930139-9cad-44f4-9b9f-3a008c912f4d",
+              "leftValue": "={{ 0 }}",
+              "rightValue": 0.01,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        -96
+      ],
+      "id": "315aecd4-8b3f-4fec-96c3-43193e58e174",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "Njugunajoseph853@gmail.com",
+        "subject": " AI COST ALERT – High Usage Detected",
+        "emailType": "text",
+        "message": "=High AI cost detected.  Cost: ${{$json.Estimated_Cost}} Tokens: {{$json.Total_Tokens}} Time: {{$json.Timestamp}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        -96
+      ],
+      "id": "a3ecc9c2-0cc1-410d-9072-82ca0127e888",
+      "name": "Send a message",
+      "webhookId": "48975f25-7c3a-4c1a-9d63-ce082e7183b8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4AuYzGMmqGzWk5Gk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14nqqPr07NfT4jAe7IjxqJaKoMrBuIv1jsIcPpiVaaQI",
+          "mode": "list",
+          "cachedResultName": "Ai Cost Monitor",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14nqqPr07NfT4jAe7IjxqJaKoMrBuIv1jsIcPpiVaaQI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1325374053,
+          "mode": "list",
+          "cachedResultName": "usage logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14nqqPr07NfT4jAe7IjxqJaKoMrBuIv1jsIcPpiVaaQI/edit#gid=1325374053"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Model",
+              "displayName": "Model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt Tokens",
+              "displayName": "Prompt Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Completion Tokens",
+              "displayName": "Completion Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Tokens",
+              "displayName": "Total Tokens",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estimated Cost",
+              "displayName": "Estimated Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        -96
+      ],
+      "id": "19e52b68-47b9-4574-ae77-ec248d3b520e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZDvUBYBJmlHfccmM",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f1a56bf4-bae4-4fd2-bc43-1e2db8f7f7dd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c571e24ec810276817669e29f8bec76845fa343d2302c2c6832863520d81eac4"
+  },
+  "id": "fkzEUw9BGqMM6oTC_OvcM",
+  "tags": []
+}
