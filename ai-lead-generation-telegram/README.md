@@ -1,5 +1,5 @@
 # AI Lead Generation (Telegram)
-
+![Workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/screenshots/LEADS%20AI%20TELEGRAM%20DAY%204%20-%20Copy.png?raw=true)
 ## What this project does
 This automation collects leads from Telegram, processes them, and helps identify high-quality potential customers.
 
