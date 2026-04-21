@@ -50,10 +50,7 @@ This system turns raw conversations into actionable insights.
 
 ## 📥 Download Workflow
 
-Click below to download and import into n8n:
-
-[Download AI Customer Insights Workflow](ai-customer-insights.json)
-
+[Download JSON](ai-customer-insights.json)
 * Helps businesses understand customers better
 * Identifies problems early
 * Supports data-driven decisions
