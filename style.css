@@ -111,3 +111,29 @@ h2 {
   margin-top: -20px;
   margin-bottom: 30px;
 }
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #1f2937;
+  color: white;
+}
+
+/* LIGHT MODE */
+.light-mode {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.light-mode .card {
+  background: #ffffff;
+  color: #111827;
+}
+
+.light-mode header {
+  background: linear-gradient(135deg, #e5e7eb, #f9fafb);
+}
