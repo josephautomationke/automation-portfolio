@@ -1,5 +1,5 @@
 # AI Customer Insights System (n8n + AI)
-
+![workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/screenshots/Ai%20Customer%20insights%20p%20-%20Copy.png?raw=true)
 ## 🚀 Overview
 
 This project is an AI-powered customer insights system that analyzes incoming messages and extracts meaningful business insights automatically.
