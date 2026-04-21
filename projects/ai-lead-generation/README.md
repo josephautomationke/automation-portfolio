@@ -41,13 +41,11 @@ Businesses often lose potential customers due to slow response times and manual 
 
 ---
 
-## 📊 Workflow Preview
+## 📥 Download Workflow
 
-![Workflow Screenshot](screenshot.png)
+Click below to download and import into n8n:
 
----
-
-## 🎯 Outcome
+[Download AI Lead Generation Workflow](ai-lead-generation.json)
 
 * Reduces manual work in lead handling
 * Improves response speed
