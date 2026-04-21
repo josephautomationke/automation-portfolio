@@ -44,9 +44,7 @@ This system ensures immediate awareness of important events.
 
 ## 📥 Download Workflow
 
-Click below to download and import into n8n:
-
-[Download Monitor & Alert System Workflow](monitor-alert-system.json)
+[Download JSON](monitor-alert-system.json)
 
 * Prevents unnoticed failures
 * Improves system reliability
