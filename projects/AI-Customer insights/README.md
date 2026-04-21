@@ -48,13 +48,11 @@ This system turns raw conversations into actionable insights.
 
 ---
 
-## 📊 Workflow Preview
+## 📥 Download Workflow
 
-![Workflow Screenshot](screenshot.png)
+Click below to download and import into n8n:
 
----
-
-## 🎯 Outcome
+[Download AI Lead Generation Workflow](AI customer insights.json)
 
 * Helps businesses understand customers better
 * Identifies problems early
