@@ -1,14 +1,16 @@
+/* RESET */
 body {
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #0b1220;
   color: white;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* HEADER */
 header {
   text-align: center;
-  padding: 80px 20px;
+  padding: 90px 20px;
   background: linear-gradient(135deg, #111827, #1f2937);
 }
 
@@ -27,6 +29,14 @@ h1 {
   max-width: 1100px;
   margin: auto;
   padding: 40px 20px;
+}
+
+/* TAGLINE */
+.tagline {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 30px;
+  line-height: 1.6;
 }
 
 /* GRID */
@@ -49,7 +59,7 @@ h1 {
 /* HOVER EFFECT */
 .card:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* IMAGE */
@@ -61,7 +71,7 @@ h1 {
 }
 
 .card:hover img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 /* TEXT */
@@ -96,31 +106,48 @@ h1 {
 /* LINKS */
 a {
   text-decoration: none;
-  color: white;
+  color: inherit;
 }
 
-/* SECTION TITLE */
+/* SECTION HEADINGS */
 h2 {
   margin-bottom: 20px;
 }
 
-/* SMALL TAGLINE TEXT */
-.tagline {
+/* COUNTERS */
+.counter {
   text-align: center;
-  color: #94a3b8;
-  margin-top: -20px;
-  margin-bottom: 30px;
 }
+
+.counter h2 {
+  font-size: 40px;
+  margin: 0;
+  color: #3b82f6;
+}
+
+.counter p {
+  margin-top: 5px;
+  color: #94a3b8;
+}
+
+/* THEME TOGGLE BUTTON */
 #theme-toggle {
   position: fixed;
   top: 20px;
   right: 20px;
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   background: #1f2937;
   color: white;
+  font-size: 18px;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+#theme-toggle:hover {
+  transform: scale(1.1);
 }
 
 /* LIGHT MODE */
@@ -129,11 +156,30 @@ h2 {
   color: #111827;
 }
 
-.light-mode .card {
-  background: #ffffff;
-  color: #111827;
-}
-
 .light-mode header {
   background: linear-gradient(135deg, #e5e7eb, #f9fafb);
+}
+
+.light-mode .subtitle,
+.light-mode .tagline,
+.light-mode .card p {
+  color: #4b5563;
+}
+
+.light-mode .card {
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.light-mode .card:hover {
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.light-mode .counter h2 {
+  color: #2563eb;
+}
+
+/* SMOOTH SCROLL */
+html {
+  scroll-behavior: smooth;
 }
