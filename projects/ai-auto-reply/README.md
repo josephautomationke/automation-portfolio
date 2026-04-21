@@ -44,9 +44,7 @@ This system ensures instant, consistent, and intelligent replies.
 
 ## 📥 Download Workflow
 
-Click below to download and import into n8n:
-
-[Download AI Auto Reply Workflow](ai-auto-reply.json)
+[Download JSON](ai-auto-reply.json)
 
 * Improves response time
 * Enhances customer experience
