@@ -23,7 +23,11 @@ Analyzes customer messages and extracts business insights automatically.
 ### 3. AI Lead Generation System
 Captures and qualifies leads using Telegram automation.
 
-👉 (add link)
+## 📥 Download Workflow
+
+Click below to download and import into n8n:
+
+[Download AI Lead Generation Workflow](ai-lead-generation.json)
 
 ---
 
