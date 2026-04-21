@@ -1,5 +1,5 @@
 # AI Auto Reply System (n8n + AI)
-
+![wworkflow](https://github.com/josephautomationke/automation-portfolio/blob/main/screenshots/AI%20ASSISTANT%20AUTO%20REPLY%20-%20Copy.png?raw=true)
 ## 🚀 Overview
 
 This project is an AI-powered auto-reply system that automatically responds to customer messages in real time using intelligent responses.
