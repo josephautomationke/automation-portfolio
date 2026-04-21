@@ -1,0 +1,441 @@
+{
+  "name": "AI operations&alert system",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -128
+      ],
+      "id": "faf8c75c-e367-485d-8e2a-4092b0d5e016",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Analyze the following customer message and return:\nsentiment, urgency, recommended_action\n\nCustomer message:\n\"The app works perfectly and support was very helpful.\""
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        -128
+      ],
+      "id": "520cf3f8-9019-47d5-8dc4-941cba22d0be",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yOBN7xL0XltuowfE",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d52a52f6-20cc-4920-8313-250b3b02d632",
+              "name": "Sentiment",
+              "value": "={{$json.output[0].content[0].text.match(/\\*\\*Sentiment\\*\\*:\\s*(.*)/)?.[1]}}\n",
+              "type": "string"
+            },
+            {
+              "id": "9b83ab41-dc7b-4689-b463-aedb8215fc00",
+              "name": "Urgency",
+              "value": "={{$json.output[0].content[0].text.match(/\\*\\*Urgency\\*\\*:\\s*(.*)/)?.[1]}}\n",
+              "type": "string"
+            },
+            {
+              "id": "4d860e4b-3d6b-428a-bfc3-8dbaaf814152",
+              "name": "Recommendation",
+              "value": "={{$json.output[0].content[0].text.match(/\\*\\*Recommended Action\\*\\*:\\s*(.*)/)?.[1]}}\n",
+              "type": "string"
+            },
+            {
+              "id": "71f66f75-52a8-4893-94da-6bff7510ceb7",
+              "name": "Timestamp",
+              "value": "={{new Date().toISOString()}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        -128
+      ],
+      "id": "b3f24f04-79ed-4d1c-ad7e-721524308607",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "02597686-34c2-4bab-b08b-67a037ae7e4c",
+              "leftValue": "={{ $json.Sentiment }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "901221ee-8d70-415b-88ac-b4a84b481586",
+              "leftValue": "={{ $json.Urgency }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b194f716-997c-4ee0-9cb7-393c39f24858",
+              "leftValue": "={{ $json.Sentiment }}",
+              "rightValue": "negative",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bed05b7f-aa6c-45fd-b005-99e42c14e87d",
+              "leftValue": "={{ $json.Urgency }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        352,
+        -128
+      ],
+      "id": "5dcb5a92-d2b1-4791-8242-68f1e0fb585c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "njugunajoseph853@gmail.com",
+        "subject": "AI OPERATION ALERT – Immediate Review Needed",
+        "emailType": "text",
+        "message": "=An AI operation has triggered an alert.  Sentiment: {{$json.Sentiment}} Urgency: {{$json.Urgency}} Recommendation: {{$json.Recommendation}}  Time: {{$json.Timestamp}}  Please review and take action.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -224
+      ],
+      "id": "fd3e36e9-ab51-4686-87b6-5c6d500092e2",
+      "name": "Send a message",
+      "webhookId": "e6825d28-0866-407f-9a7c-d102d252626c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4AuYzGMmqGzWk5Gk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4",
+          "mode": "list",
+          "cachedResultName": "AI operations monitor",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1055374004,
+          "mode": "list",
+          "cachedResultName": "Ai operation issues",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4/edit#gid=1055374004"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Edit Fields').item.json.Timestamp }}",
+            "Sentiment": "={{ $('Edit Fields').item.json.Sentiment }}",
+            "Urgency": "={{ $('Edit Fields').item.json.Urgency }}",
+            "Recommendations": "={{ $('Edit Fields').item.json.Recommendation }}",
+            "Status": "Alert"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommendations",
+              "displayName": "Recommendations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        -224
+      ],
+      "id": "688e407b-68ab-4afe-84f1-4e0960aa2b1e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZDvUBYBJmlHfccmM",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4",
+          "mode": "list",
+          "cachedResultName": "AI operations monitor",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 749598010,
+          "mode": "list",
+          "cachedResultName": "Ai operation logs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Srsa7FnwG0r4c9s7HtdkfzbPrn4JXgxH15fkoA46pD4/edit#gid=749598010"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Edit Fields').item.json.Timestamp }}",
+            "Sentiment": "={{ $('Edit Fields').item.json.Sentiment }}",
+            "Urgency": "={{ $('Edit Fields').item.json.Urgency }}",
+            "Recommendation": "={{ $('Edit Fields').item.json.Recommendation }}",
+            "Status": "Ok"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency",
+              "displayName": "Urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recommendation",
+              "displayName": "Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        -32
+      ],
+      "id": "574c320c-9206-4585-a85a-eb990644f5ae",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZDvUBYBJmlHfccmM",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "3f00838f-7797-48cd-a497-0605eedf205a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c571e24ec810276817669e29f8bec76845fa343d2302c2c6832863520d81eac4"
+  },
+  "id": "vgspLyLdfz3AYUT4Bzx8e",
+  "tags": []
+}
