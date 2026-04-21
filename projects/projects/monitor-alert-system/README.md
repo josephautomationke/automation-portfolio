@@ -1,5 +1,5 @@
 # Monitor & Alert System (n8n Automation)
-
+![workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/screenshots/monitor&Alert%20system%20-%20Copy.png?raw=true)
 ## 🚀 Overview
 
 This project is a real-time monitoring and alert system that detects changes, failures, or important events and sends instant notifications.
