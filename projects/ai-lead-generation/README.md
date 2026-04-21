@@ -1,5 +1,5 @@
 # AI Lead Generation System (Telegram + n8n)
-![workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/screenshots/LEADS%20AI%20TELEGRAM%20DAY%204%20-%20Copy.png?raw=true)
+![workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/projects/ai-lead-generation/LEADS%20AI%20TELEGRAM%20DAY%204%20-%20Copy.png?raw=true)
 ## 🚀 Overview
 
 This project is an AI-powered lead generation and qualification system built using n8n and Telegram. It automates the process of capturing, analyzing, and delivering high-quality leads in real time.
