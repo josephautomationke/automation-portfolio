@@ -178,3 +178,30 @@ h2 {
   }
 
 }
+.socials {
+  position: fixed;
+  left: 15px;
+  top: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.socials a {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.insta {
+  background: #e1306c;
+}
+
+.fb {
+  background: #1877f2;
+}
