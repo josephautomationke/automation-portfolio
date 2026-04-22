@@ -4,185 +4,136 @@
   <meta charset="UTF-8">
   <title>AI Automation Portfolio</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- AOS ANIMATIONS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- 🌗 DARK/LIGHT TOGGLE -->
 <button id="theme-toggle">🌙</button>
 
-<header data-aos="fade-down">
+<header>
   <h1>AI Automation Engineer</h1>
-  <p class="subtitle">
-    I design intelligent systems that eliminate repetitive work, unlock insights, and scale businesses automatically
-  </p>
+  <p class="subtitle">I build AI systems that capture leads, reply instantly, and automate business workflows.</p>
 </header>
 
 <div class="container">
 
-  <!-- 💡 ABOUT (UPGRADED) -->
-  <section data-aos="fade-up">
-    <h2>👋 About Me</h2>
-    <p class="tagline">
-      I don’t just build automations — I design intelligent systems that replace manual work, 
-      reduce inefficiencies, and help businesses operate smarter.
-      <br><br>
-      From AI-powered lead generation to real-time monitoring systems, I focus on building 
-      solutions that deliver real business outcomes — faster responses, better decisions, 
-      and scalable workflows.
-    </p>
-  </section>
+  <!-- 🔥 HOW SYSTEMS WORK -->
+  <section class="system-flow">
+    <h2>⚙️ How My AI Systems Work</h2>
+    <p>I design automation systems that handle repetitive business tasks from start to finish.</p>
 
-  <!-- 📊 COUNTERS -->
-  <section data-aos="fade-up">
-    <div class="grid">
-      <div class="card counter">
-        <h2 class="count" data-target="8">0</h2>
-        <p>Systems Built</p>
-      </div>
-      <div class="card counter">
-        <h2 class="count" data-target="4">0</h2>
-        <p>Automation Categories</p>
-      </div>
-      <div class="card counter">
-        <h2 class="count" data-target="100">0</h2>
-        <p>% Workflow Automation</p>
-      </div>
+    <div class="flow-box">
+      Lead → AI Processing → Data Storage → Automation → Business Results
     </div>
   </section>
 
-  <!-- ⚡ WHAT I CAN DO -->
-  <section data-aos="fade-up">
-    <h2>⚡ What I Can Do</h2>
-
-    <div class="grid">
-
-      <div class="card">
-        <h3>AI Lead Generation</h3>
-        <p>Capture, qualify, and manage leads automatically using AI and messaging systems.</p>
-      </div>
-
-      <div class="card">
-        <h3>Customer Support AI</h3>
-        <p>Build AI auto-reply systems that respond instantly to customer inquiries.</p>
-      </div>
-
-      <div class="card">
-        <h3>Customer Insights AI</h3>
-        <p>Analyze conversations and extract valuable business insights automatically.</p>
-      </div>
-
-      <div class="card">
-        <h3>Monitor & Alert Systems</h3>
-        <p>Track workflows and receive real-time alerts when key events happen.</p>
-      </div>
-
-      <div class="card">
-        <h3>AI Content Split & Scheduler</h3>
-        <p>Break down long content into structured posts and automatically schedule them.</p>
-      </div>
-
-      <div class="card">
-        <h3>Forex Market Insights AI</h3>
-        <p>Analyze New York & London sessions and generate EUR/USD trading insights.</p>
-      </div>
-
-      <div class="card">
-        <h3>Google Drive Smart Organizer</h3>
-        <p>Automatically organize uploaded files into structured folders using AI logic.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 🚀 PROJECTS -->
+  <!-- 🚀 WHAT I DO -->
   <section>
-    <h2 data-aos="fade-up">🚀 My Projects</h2>
+    <h2>💼 What I Can Do</h2>
+
+    <p class="tagline">
+      I help businesses automate customer interactions, generate leads, and gain insights using AI-powered workflows.
+    </p>
 
     <div class="grid">
 
-      <a href="https://github.com/josephautomationke/automation-portfolio/tree/main/projects/ai-lead-generation" target="_blank">
-        <div class="card" data-aos="fade-up">
+      <!-- AI Lead Generation -->
+      <a href="projects/ai-lead-generation/README.md">
+        <div class="card">
           <h3>AI Lead Generation</h3>
+          <p class="desc">Automatically captures and qualifies leads from Telegram and web forms.</p>
+          <p class="flow">Lead → AI Qualification → Stored → Ready for follow-up</p>
           <img src="projects/ai-lead-generation/screenshot.png">
           <button class="view-btn">View Project</button>
         </div>
       </a>
 
-      <a href="https://github.com/josephautomationke/automation-portfolio/tree/main/projects/ai-customer-insights" target="_blank">
-        <div class="card" data-aos="fade-up">
+      <!-- AI Customer Insights -->
+      <a href="projects/ai-customer-insights/README.md">
+        <div class="card">
           <h3>AI Customer Insights</h3>
+          <p class="desc">Analyzes customer conversations and extracts actionable insights.</p>
+          <p class="flow">Messages → AI Analysis → Insights → Dashboard</p>
           <img src="projects/ai-customer-insights/screenshot.png">
           <button class="view-btn">View Project</button>
         </div>
       </a>
 
-      <a href="https://github.com/josephautomationke/automation-portfolio/tree/main/projects/ai-auto-reply" target="_blank">
-        <div class="card" data-aos="fade-up">
-          <h3>AI Auto Reply</h3>
+      <!-- AI Auto Reply -->
+      <a href="projects/ai-auto-reply/README.md">
+        <div class="card">
+          <h3>AI Auto Reply System</h3>
+          <p class="desc">Instant AI-powered responses to customer inquiries 24/7.</p>
+          <p class="flow">Message → AI Reply → Customer Engaged</p>
           <img src="projects/ai-auto-reply/screenshot.png">
           <button class="view-btn">View Project</button>
         </div>
       </a>
 
-      <a href="https://github.com/josephautomationke/automation-portfolio/tree/main/projects/monitor-alert-system" target="_blank">
-        <div class="card" data-aos="fade-up">
-          <h3>Monitor & Alert</h3>
+      <!-- Monitor & Alert -->
+      <a href="projects/monitor-alert-system/README.md">
+        <div class="card">
+          <h3>Monitor & Alert System</h3>
+          <p class="desc">Tracks system events and sends real-time alerts automatically.</p>
+          <p class="flow">Event → Detection → Alert → Action</p>
           <img src="projects/monitor-alert-system/screenshot.png">
           <button class="view-btn">View Project</button>
         </div>
       </a>
 
+      <!-- AI Content Generator -->
+      <div class="card">
+        <h3>AI Content Scheduler</h3>
+        <p class="desc">Generates factual content and schedules posting timelines.</p>
+        <p class="flow">Content → AI Structuring → Scheduled Posting</p>
+        <button class="view-btn">Coming Soon</button>
+      </div>
+
+      <!-- Market Insights -->
+      <div class="card">
+        <h3>AI Market Insights (Forex)</h3>
+        <p class="desc">Tracks market sessions and delivers insights for EUR/USD trends.</p>
+        <p class="flow">Market Data → AI Analysis → Insights</p>
+        <button class="view-btn">Coming Soon</button>
+      </div>
+
+      <!-- Google Organizer -->
+      <div class="card">
+        <h3>Google Drive Smart Organizer</h3>
+        <p class="desc">Automatically organizes files in Google Drive using AI rules.</p>
+        <p class="flow">Upload → AI Sorting → Organized Storage</p>
+        <button class="view-btn">Coming Soon</button>
+      </div>
+
     </div>
   </section>
 
-  <!-- 💼 CTA -->
-  <section style="text-align:center; margin-top:50px;" data-aos="fade-up">
-    <h2>💼 Let’s Work Together</h2>
+  <!-- 📞 CTA -->
+  <section style="text-align:center; margin-top: 50px;">
+    <h2>🚀 Work With Me</h2>
     <p class="tagline">
-      If you want to automate your business and save hours of manual work, I can build the system for you.
+      I can build custom AI automation systems for your business to save time and increase revenue.
     </p>
 
     <a href="https://wa.me/254115361894" target="_blank">
-      <button class="view-btn" style="max-width:300px;">
-        Contact Me on WhatsApp
-      </button>
+      <button class="view-btn" style="max-width:300px;">Contact Me on WhatsApp</button>
     </a>
   </section>
 
 </div>
 
-<!-- SCRIPTS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
+<!-- 🌙 THEME TOGGLE SCRIPT -->
 <script>
-AOS.init({ duration: 1000, once: true });
-
-// COUNTER ANIMATION
-const counters = document.querySelectorAll('.count');
-counters.forEach(counter => {
-  const update = () => {
-    const target = +counter.getAttribute('data-target');
-    const current = +counter.innerText;
-    const increment = target / 50;
-
-    if (current < target) {
-      counter.innerText = Math.ceil(current + increment);
-      setTimeout(update, 40);
-    } else {
-      counter.innerText = target;
-    }
-  };
-  update();
-});
-
-// DARK MODE TOGGLE
 const toggle = document.getElementById('theme-toggle');
+
 toggle.onclick = () => {
   document.body.classList.toggle('light-mode');
+
+  if (document.body.classList.contains('light-mode')) {
+    toggle.innerText = "☀️";
+  } else {
+    toggle.innerText = "🌙";
+  }
 };
 </script>
 
