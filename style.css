@@ -41,7 +41,7 @@ header {
 }
 
 .hero h1 {
-  font-size: 38px;
+  font-size: 36px;
   max-width: 700px;
   margin: auto;
 }
@@ -54,14 +54,16 @@ header {
   color: #94a3b8;
 }
 
-.cta-btn {
-  margin-top: 20px;
-  padding: 12px 25px;
-  border: none;
-  background: #3b82f6;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
+/* INTRO */
+.intro {
+  max-width: 700px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.intro p {
+  color: #cbd5f5;
+  line-height: 1.6;
 }
 
 /* CONTAINER */
@@ -120,6 +122,15 @@ header {
 .cta {
   text-align: center;
   margin-top: 60px;
+}
+
+.cta-btn {
+  margin-top: 15px;
+  padding: 12px 25px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  border-radius: 8px;
 }
 
 /* LIGHT MODE */
