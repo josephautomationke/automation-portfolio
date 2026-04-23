@@ -19,13 +19,18 @@
         <a href="#">Facebook</a>
       </div>
 
-      <button id="theme-toggle">🌙</button>
+      <div class="theme-box">
+        <span id="theme-label">Dark</span>
+        <button id="theme-toggle">🌙</button>
+      </div>
     </div>
   </div>
 
   <div class="hero">
 
-    <img src="assets/ai-banner.png" class="hero-img">
+    <!-- HEADER IMAGE -->
+    <img src="assets/ai-banner.png" class="hero-img" 
+         onerror="this.src='https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200'">
 
     <h1>
       AI Systems That <span>Increase Sales</span><br>
@@ -46,17 +51,9 @@
   <section class="intro">
     <h2>What I Do for Businesses</h2>
 
-    <p>
-      I build AI systems that help businesses respond faster, capture more leads, and operate efficiently.
-    </p>
-
-    <p>
-      Most businesses lose customers due to slow replies and missed follow-ups. My systems fix that automatically.
-    </p>
-
-    <p>
-      This means less work, faster responses, and more revenue without hiring extra staff.
-    </p>
+    <p>I build AI systems that help businesses respond faster, capture more leads, and operate efficiently.</p>
+    <p>Most businesses lose customers due to slow replies and missed follow-ups. My systems fix that automatically.</p>
+    <p>This means less work, faster responses, and more revenue without hiring extra staff.</p>
   </section>
 
   <!-- PROJECTS -->
@@ -64,6 +61,8 @@
     <h2 class="section-title">AI Systems I Build</h2>
 
     <div class="grid">
+
+      <!-- CORE PROJECTS -->
 
       <div class="card">
         <h3>AI Lead Generation</h3>
@@ -101,6 +100,32 @@
         </a>
       </div>
 
+      <!-- REQUEST PROJECTS (IMPORTANT) -->
+
+      <div class="card">
+        <h3>AI Content System</h3>
+        <p>Automates content planning and posting to grow your online presence.</p>
+        <a href="https://wa.me/254115361894">
+          <button class="view-btn">Request System</button>
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Market Insights AI</h3>
+        <p>Provides real-time market analysis for smarter business decisions.</p>
+        <a href="https://wa.me/254115361894">
+          <button class="view-btn">Request System</button>
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Smart File Organizer</h3>
+        <p>Automatically organizes files in Google Drive to save time.</p>
+        <a href="https://wa.me/254115361894">
+          <button class="view-btn">Request System</button>
+        </a>
+      </div>
+
     </div>
   </section>
 
@@ -117,10 +142,18 @@
 
 <script>
 const toggle = document.getElementById('theme-toggle');
+const label = document.getElementById('theme-label');
 
 toggle.onclick = () => {
   document.body.classList.toggle('light');
-  toggle.innerText = document.body.classList.contains('light') ? "☀️" : "🌙";
+
+  if (document.body.classList.contains('light')) {
+    label.innerText = "Light";
+    toggle.innerText = "☀️";
+  } else {
+    label.innerText = "Dark";
+    toggle.innerText = "🌙";
+  }
 };
 </script>
 
