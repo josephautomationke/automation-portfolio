@@ -9,15 +9,22 @@
 <body>
 
 <header>
+
+  <!-- NAV -->
   <div class="nav">
     <h2 class="logo">AI Systems</h2>
 
-    <div class="socials">
-      <a href="https://instagram.com/" target="_blank">Instagram</a>
-      <a href="https://facebook.com/" target="_blank">Facebook</a>
+    <div class="right">
+      <div class="socials">
+        <a href="https://instagram.com/" target="_blank">Instagram</a>
+        <a href="https://facebook.com/" target="_blank">Facebook</a>
+      </div>
+
+      <button id="theme-toggle">🌙</button>
     </div>
   </div>
 
+  <!-- HERO -->
   <div class="hero">
     <h1>
       I Build AI Systems That <span>Increase Sales</span>  
@@ -25,22 +32,23 @@
     </h1>
 
     <p>
-      Capture leads, respond instantly, and run smarter operations — all powered by automation.
+      Capture leads, reply instantly, and run smarter operations without extra work.
     </p>
 
     <a href="https://wa.me/254115361894" target="_blank">
-      <button class="cta-btn">Work With Me</button>
+      <button class="cta-btn">Chat on WhatsApp</button>
     </a>
   </div>
+
 </header>
 
 <div class="container">
 
-  <!-- SYSTEM FLOW -->
+  <!-- FLOW -->
   <section class="system-flow">
     <h2>How It Works</h2>
     <div class="flow-box">
-      Customer Inquiry → AI Processing → Data Capture → Automated Actions → Business Growth
+      Inquiry → AI Processing → Data Capture → Automation → More Revenue
     </div>
   </section>
 
@@ -50,11 +58,10 @@
 
     <div class="grid">
 
-      <!-- LEAD GEN -->
       <div class="card">
         <h3>AI Lead Generation</h3>
         <p>
-          Automatically captures and qualifies potential customers so your business never misses a sales opportunity.
+          Captures and qualifies leads automatically so your business never misses potential customers.
         </p>
         <img src="projects/ai-lead-generation/screenshot.png">
         <a href="projects/ai-lead-generation/README.md">
@@ -62,11 +69,10 @@
         </a>
       </div>
 
-      <!-- INSIGHTS -->
       <div class="card">
         <h3>AI Customer Insights</h3>
         <p>
-          Transforms customer conversations into insights that help you improve services and increase revenue.
+          Turns customer conversations into insights that improve services and increase sales.
         </p>
         <img src="projects/ai-customer-insights/screenshot.png">
         <a href="projects/ai-customer-insights/README.md">
@@ -74,11 +80,10 @@
         </a>
       </div>
 
-      <!-- AUTO REPLY -->
       <div class="card">
         <h3>AI Auto Reply</h3>
         <p>
-          Instantly responds to customers 24/7, improving engagement and turning more inquiries into paying clients.
+          Responds instantly to customers 24/7, increasing engagement and conversions.
         </p>
         <img src="projects/ai-auto-reply/screenshot.png">
         <a href="projects/ai-auto-reply/README.md">
@@ -86,11 +91,10 @@
         </a>
       </div>
 
-      <!-- MONITOR -->
       <div class="card">
-        <h3>Monitor & Alert System</h3>
+        <h3>Monitor & Alerts</h3>
         <p>
-          Detects issues and sends instant alerts so you can act fast and protect your business operations.
+          Tracks key events and alerts you instantly so you can act fast and prevent losses.
         </p>
         <img src="projects/monitor-alert-system/screenshot.png">
         <a href="projects/monitor-alert-system/README.md">
@@ -98,33 +102,20 @@
         </a>
       </div>
 
-      <!-- CONTENT -->
       <div class="card">
         <h3>AI Content System</h3>
         <p>
-          Helps businesses stay consistent online and attract more customers through structured content automation.
+          Helps your business stay visible online and attract more customers consistently.
         </p>
         <a href="https://wa.me/254115361894">
           <button class="view-btn">Request This</button>
         </a>
       </div>
 
-      <!-- MARKET -->
-      <div class="card">
-        <h3>AI Market Insights</h3>
-        <p>
-          Provides real-time insights to support smarter decisions in fast-moving environments.
-        </p>
-        <a href="https://wa.me/254115361894">
-          <button class="view-btn">Request This</button>
-        </a>
-      </div>
-
-      <!-- ORGANIZER -->
       <div class="card">
         <h3>Smart File Organizer</h3>
         <p>
-          Automatically organizes files to save time and improve business efficiency.
+          Automatically organizes files, saving time and improving efficiency.
         </p>
         <a href="https://wa.me/254115361894">
           <button class="view-btn">Request This</button>
@@ -134,7 +125,31 @@
     </div>
   </section>
 
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Let’s Automate Your Business</h2>
+    <p>
+      Want more leads, faster responses, and better efficiency? Let’s build your AI system.
+    </p>
+
+    <a href="https://wa.me/254115361894" target="_blank">
+      <button class="cta-btn">Start on WhatsApp</button>
+    </a>
+  </section>
+
 </div>
+
+<!-- TOGGLE SCRIPT -->
+<script>
+const toggle = document.getElementById('theme-toggle');
+
+toggle.onclick = () => {
+  document.body.classList.toggle('light');
+
+  toggle.innerText =
+    document.body.classList.contains('light') ? "☀️" : "🌙";
+};
+</script>
 
 </body>
 </html>
