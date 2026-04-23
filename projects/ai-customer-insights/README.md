@@ -1,74 +1,83 @@
-# AI Customer Insights System (n8n + AI)
-![workflow](https://github.com/josephautomationke/automation-portfolio/blob/main/projects/ai-customer-insights/screenshot.png?raw=true)
-## 🚀 Overview
-
-This project is an AI-powered customer insights system that analyzes incoming messages and extracts meaningful business insights automatically.
+# 📊 AI Customer Insights System  
+### Turn Customer Messages into Business Intelligence
 
 ---
 
-## 💼 Problem it Solves
+![Workflow Screenshot](screenshot.png)
 
-Businesses receive large volumes of customer messages but struggle to understand patterns, complaints, and opportunities hidden in the data.
+---
 
-This system turns raw conversations into actionable insights.
+## 💼 What This System Does
+
+This AI system analyzes customer messages and extracts **valuable business insights automatically**.
+
+Instead of guessing what customers want, businesses get:
+- Sentiment analysis (Positive / Neutral / Negative)
+- Common complaints
+- Frequently asked questions
+- Product feedback
+
+👉 Result: **Better decisions, better services, more revenue**
+
+---
+
+## ⚠️ Problem It Solves
+
+Businesses receive many messages daily but:
+- Don’t analyze them properly  
+- Miss patterns and trends  
+- Fail to improve based on feedback  
+
+This leads to poor customer experience and lost opportunities.
 
 ---
 
 ## ⚙️ How It Works
 
-1. Customer messages are collected (Telegram, forms, or APIs)
+1. Customer messages are collected (Telegram, forms, APIs)
 2. Data is sent into n8n workflow
 3. AI analyzes the content
-4. Extracted insights include:
-
-   * Customer sentiment
-   * Common complaints
-   * Frequently asked questions
-   * Product/service feedback
+4. Insights are extracted automatically
 5. Results are stored or sent as summaries
 
 ---
 
-## 🧠 Key Features
+## 🔥 Key Benefits
 
-* Automated message analysis
-* Sentiment detection (Positive / Neutral / Negative)
-* Insight extraction
-* Summary generation using AI
-* Integration with Google Sheets or dashboards
+✔ Automated message analysis  
+✔ Customer sentiment detection  
+✔ Insight extraction  
+✔ Better decision-making  
+✔ Improved customer satisfaction  
 
 ---
 
-## 🛠️ Tools & Technologies
+## 🧠 Business Impact
 
-* n8n
-* AI (OpenAI or similar)
-* APIs / Webhooks
-* Google Sheets (optional storage)
+- Understand what customers really want  
+- Fix problems faster  
+- Improve products and services  
+
+👉 Leads to **higher customer retention and growth**
+
+---
+
+## 🛠 Tech Stack
+
+- n8n (Automation)
+- AI Processing (OpenAI or similar)
+- Google Sheets / Dashboard tools
 
 ---
 
 ## 📥 Download Workflow
 
-[Download JSON](ai-customer-insights.json)
-* Helps businesses understand customers better
-* Identifies problems early
-* Supports data-driven decisions
-* Saves hours of manual analysis
+👉 [Download JSON](your-json-link-here)
 
 ---
 
-## 🔮 Future Improvements
+## 📞 Want This System?
 
-* Dashboard visualization
-* Real-time analytics
-* Integration with CRM tools
-* Automated reporting
+👉 https://wa.me/254115361894
 
 ---
-
-## 📩 Contact
-
-Email: [josephnjuguna.automation@gmail.com](mailto:josephnjuguna.automation@gmail.com)
-Phone: +254115361894
-
