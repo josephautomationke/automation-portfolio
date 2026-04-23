@@ -24,7 +24,7 @@ body {
   text-decoration: none;
 }
 
-/* TOGGLE WITH LABEL */
+/* TOGGLE */
 .theme-box {
   display: flex;
   align-items: center;
@@ -48,40 +48,17 @@ body {
 /* HERO */
 .hero {
   text-align: center;
-  padding: 40px 20px;
+  padding: 50px 20px;
 }
 
 .hero-img {
-  width: 220px;
-  margin-bottom: 20px;
+  width: 320px;
+  max-width: 90%;
+  margin-bottom: 25px;
   border-radius: 12px;
 }
 
-.hero h1 {
-  font-size: 36px;
-}
-
-.hero span {
-  color: #60a5fa;
-}
-
-.hero p {
-  color: #94a3b8;
-}
-
 /* INTRO */
-.intro {
-  max-width: 700px;
-  margin: 40px auto;
-  text-align: center;
-}
-
-.intro p {
-  color: #cbd5f5;
-  line-height: 1.6;
-}
-
-/* CONTAINER */
 .container {
   max-width: 900px;
   margin: auto;
@@ -101,23 +78,41 @@ body {
   border-radius: 12px;
 }
 
-/* 🔥 IMAGE FIX (IMPORTANT) */
+/* IMAGE FIX */
 .card img {
-  width: 90%;
+  width: 85%;
   display: block;
   margin: 15px auto;
   border-radius: 10px;
 }
 
-/* BUTTON */
-.view-btn {
+/* BUTTON GROUP */
+.btn-group {
+  display: flex;
+  gap: 10px;
   margin-top: 15px;
-  width: 100%;
+}
+
+.view-btn {
+  flex: 1;
   padding: 10px;
   background: #3b82f6;
   border: none;
   color: white;
   border-radius: 8px;
+}
+
+.request-btn {
+  flex: 1;
+  padding: 10px;
+  background: #22c55e;
+  border: none;
+  color: white;
+  border-radius: 8px;
+}
+
+.request-btn.full {
+  width: 100%;
 }
 
 /* CTA */
@@ -128,7 +123,7 @@ body {
 
 .cta-btn {
   padding: 12px 25px;
-  background: #3b82f6;
+  background: #22c55e;
   border: none;
   color: white;
   border-radius: 8px;
@@ -154,7 +149,7 @@ body {
     margin-bottom: 40px;
   }
 
-  .hero h1 {
-    font-size: 26px;
+  .btn-group {
+    flex-direction: column;
   }
 }
