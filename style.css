@@ -16,34 +16,37 @@ body {
 .right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .socials a {
   color: #60a5fa;
   text-decoration: none;
-  font-size: 14px;
 }
 
+/* BIGGER TOGGLE */
 #theme-toggle {
-  padding: 8px;
-  border: none;
+  padding: 10px 14px;
+  font-size: 18px;
   background: #1f2937;
-  color: white;
-  border-radius: 6px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 /* HERO */
-header {
+.hero {
   text-align: center;
-  padding: 60px 20px;
+  padding: 40px 20px;
+}
+
+.hero-img {
+  width: 200px;
+  margin-bottom: 20px;
 }
 
 .hero h1 {
   font-size: 36px;
-  max-width: 700px;
-  margin: auto;
 }
 
 .hero span {
@@ -66,27 +69,7 @@ header {
   line-height: 1.6;
 }
 
-/* CONTAINER */
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
-
-/* FLOW */
-.system-flow {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.flow-box {
-  background: #1f2937;
-  padding: 15px;
-  border-radius: 10px;
-  color: #60a5fa;
-}
-
-/* PROJECTS */
+/* GRID */
 .grid {
   display: grid;
   gap: 30px;
@@ -98,14 +81,10 @@ header {
   border-radius: 12px;
 }
 
-.card p {
-  color: #cbd5f5;
-}
-
 .card img {
   width: 100%;
-  margin-top: 10px;
   border-radius: 10px;
+  margin-top: 10px;
 }
 
 .view-btn {
@@ -125,10 +104,9 @@ header {
 }
 
 .cta-btn {
-  margin-top: 15px;
   padding: 12px 25px;
-  border: none;
   background: #3b82f6;
+  border: none;
   color: white;
   border-radius: 8px;
 }
@@ -145,10 +123,6 @@ header {
 
 /* MOBILE */
 @media (max-width: 768px) {
-  .hero h1 {
-    font-size: 26px;
-  }
-
   .grid {
     display: block;
   }
