@@ -10,7 +10,7 @@ body {
 .nav {
   display: flex;
   justify-content: space-between;
-  padding: 20px 30px;
+  padding: 20px 40px;
 }
 
 .right {
@@ -24,7 +24,18 @@ body {
   text-decoration: none;
 }
 
-/* BIGGER TOGGLE */
+/* TOGGLE WITH LABEL */
+.theme-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#theme-label {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
 #theme-toggle {
   padding: 10px 14px;
   font-size: 18px;
@@ -41,8 +52,9 @@ body {
 }
 
 .hero-img {
-  width: 200px;
+  width: 220px;
   margin-bottom: 20px;
+  border-radius: 12px;
 }
 
 .hero h1 {
@@ -69,24 +81,35 @@ body {
   line-height: 1.6;
 }
 
+/* CONTAINER */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
 /* GRID */
 .grid {
   display: grid;
   gap: 30px;
 }
 
+/* CARD */
 .card {
   background: #111827;
   padding: 20px;
   border-radius: 12px;
 }
 
+/* 🔥 IMAGE FIX (IMPORTANT) */
 .card img {
-  width: 100%;
+  width: 90%;
+  display: block;
+  margin: 15px auto;
   border-radius: 10px;
-  margin-top: 10px;
 }
 
+/* BUTTON */
 .view-btn {
   margin-top: 15px;
   width: 100%;
@@ -129,5 +152,9 @@ body {
 
   .card {
     margin-bottom: 40px;
+  }
+
+  .hero h1 {
+    font-size: 26px;
   }
 }
