@@ -1,0 +1,838 @@
+{
+  "name": "ISP Appointment Booking System",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e25dca74-2bf5-41e6-af37-403343c5a38b",
+              "name": "bookingId",
+              "value": "={{ \"ISP-\" + Date.now() }}",
+              "type": "string"
+            },
+            {
+              "id": "7f9f2f2e-f4ae-4df1-8693-6259d7d430dc",
+              "name": "status",
+              "value": "pending",
+              "type": "string"
+            },
+            {
+              "id": "296040e9-55ac-458a-8767-c61aef0bc911",
+              "name": "createdAt",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "6654725c-9a46-40a6-b22e-39fe4e32c67c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =========================================\n// ISP Dispatcher V13\n// Normalize + Area Match + Duplicate Check\n// (Skills matching removed — area/availability only)\n// =========================================\n\nconst rawBooking = $('Google Sheets Trigger').first().json;\nconst booking = {};\nfor (const key in rawBooking) {\n    booking[key.trim()] = rawBooking[key];\n}\n\nconst rows = $input.all().map(item => item.json);\n\nconst technicians = [];\nconst schedule = [];\n\nfor (const row of rows) {\n    if (row[\"Jobs Today\"] !== undefined) {\n        technicians.push(row);\n    } else if (row[\"Booking ID\"] !== undefined || row[\"BookingID\"] !== undefined) {\n        schedule.push(row);\n    }\n}\n\n// =========================================\n// Helper Functions\n// =========================================\n\nfunction clean(value) {\n    if (value === undefined || value === null) return \"\";\n    return String(value).trim();\n}\n\nfunction lower(value) {\n    return clean(value).toLowerCase();\n}\n\nfunction normalizeDate(value) {\n    value = clean(value);\n    if (!value) return \"\";\n    if (value.includes(\"/\")) {\n        const p = value.split(\"/\");\n        if (p.length === 3) {\n            const day = p[0].padStart(2, \"0\");\n            const month = p[1].padStart(2, \"0\");\n            const year = p[2];\n            return `${year}-${month}-${day}`;\n        }\n    }\n    if (value.includes(\"-\")) return value.substring(0, 10);\n    return value;\n}\n\nfunction normalizeTime(value) {\n    value = clean(value);\n    if (!value) return \"\";\n    const lowerTime = value.toLowerCase();\n    if (lowerTime.includes(\"am\") || lowerTime.includes(\"pm\")) {\n        const d = new Date(\"1970-01-01 \" + lowerTime);\n        if (!isNaN(d)) return d.toTimeString().substring(0, 5);\n    }\n    return lowerTime.substring(0, 5);\n}\n\nfunction normalizePhone(value) {\n    value = clean(value).replace(/[^0-9]/g, \"\");\n    if (value.startsWith(\"0\")) return \"254\" + value.substring(1);\n    if (value.startsWith(\"254\")) return value;\n    if (value.length === 9) return \"254\" + value;\n    return value;\n}\n\n// =========================================\n// Remove Duplicate Technicians\n// =========================================\n\nconst unique = new Map();\n\nfor (const tech of technicians) {\n    const technician = clean(tech.Technician);\n    if (!technician) continue;\n    const key = technician.toLowerCase();\n    if (!unique.has(key)) {\n        unique.set(key, {\n            Technician: technician,\n            Area: lower(tech.Area),\n            Status: lower(tech.Status),\n            Phone: normalizePhone(tech.Phone),\n            JobsToday: Number(tech[\"Jobs Today\"] || 0)\n        });\n    }\n}\n\nconst cleanTechnicians = [...unique.values()];\n\n// =========================================\n// Clean Schedule\n// =========================================\n\nconst cleanSchedule = schedule.map(job => ({\n    BookingID: clean(job[\"Booking ID\"] || job[\"BookingID\"]),\n    Technician: lower(job.Technician),\n    Date: normalizeDate(job.Date),\n    Time: normalizeTime(job.Time),\n    Customer: lower(job.Customer),\n    Area: lower(job.Area),\n    Status: lower(job.Status)\n}));\n\n// =========================================\n// Booking Object\n// =========================================\n\nconst bookingData = {\n    customer: clean(booking[\"Full Name\"]),\n    phone: normalizePhone(booking[\"Phone Number\"]),\n    email: clean(booking[\"Email Address\"]),\n    area: lower(booking[\"Installation Area\"]),\n    package: clean(booking[\"Internet Package\"]),\n    date: normalizeDate(booking[\"Preferred Installation Date\"]),\n    time: normalizeTime(booking[\"Preferred Time\"])\n};\n\n// =========================================\n// DUPLICATE CUSTOMER BOOKING CHECK\n// Same customer name + date + time, still active\n// =========================================\n\nconst isDuplicateCustomerBooking = cleanSchedule.some(row =>\n    row.Customer === bookingData.customer.toLowerCase() &&\n    row.Date === bookingData.date &&\n    row.Time === bookingData.time &&\n    row.Status !== \"completed\" &&\n    row.Status !== \"cancelled\"\n);\n\n// =========================================\n// TECHNICIAN MATCH\n// - right area\n// - not busy/off\n// - sorted by workload (fairness)\n// - not already booked at this date/time\n// =========================================\n\nlet available = null;\n\nif (!isDuplicateCustomerBooking) {\n    const candidates = cleanTechnicians\n        .filter(tech =>\n            tech.Area === bookingData.area &&\n            tech.Status !== \"busy\" &&\n            tech.Status !== \"off\"\n        )\n        .sort((a, b) => a.JobsToday - b.JobsToday);\n\n    available = candidates.find(tech =>\n        !cleanSchedule.some(row =>\n            row.Technician === tech.Technician.toLowerCase() &&\n            row.Date === bookingData.date &&\n            row.Time === bookingData.time &&\n            row.Status !== \"completed\" &&\n            row.Status !== \"cancelled\"\n        )\n    );\n}\n\n// =========================================\n// Status Logic\n// =========================================\n\nlet status;\nif (isDuplicateCustomerBooking) {\n    status = \"duplicate booking\";\n} else if (available) {\n    status = \"pending\";\n} else {\n    status = \"no technician available\";\n}\n\n// =========================================\n// Output\n// =========================================\n\nreturn [\n    {\n        json: {\n            ...bookingData,\n            bookingId: $('Edit Fields').item.json.bookingId,\n            available: !!available,\n            duplicate: isDuplicateCustomerBooking,\n            technician: available ? available.Technician : \"\",\n            technicianPhone: available ? available.Phone : \"\",\n            jobsToday: available ? available.JobsToday + 1 : 0,\n            status: status,\n            technicianCount: cleanTechnicians.length,\n            scheduleCount: cleanSchedule.length\n        }\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "97bf88d1-2ddc-4813-91b1-d65a705b3a70",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2df55125-7fa9-43f5-bd89-8823dc7a6b2c",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        0
+      ],
+      "id": "4d851697-33b7-403c-a3fb-6878b3bac57c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 593587664,
+          "mode": "list",
+          "cachedResultName": "processed bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=593587664"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Booking ID": "={{ $('Edit Fields').item.json.bookingId }}",
+            "Customer": "={{ $('Google Sheets Trigger').item.json['Full Name'] }}",
+            "Phone": "={{ $('Google Sheets Trigger').item.json['Phone Number'] }}",
+            "Area": "={{ $('Google Sheets Trigger').item.json['Installation Area'] }}",
+            "Package": "={{ $('Google Sheets Trigger').item.json['Internet Package'] }}",
+            "Date": "={{ $json.date }}",
+            "Time": "={{ $json.time }}",
+            "Status": "={{ $json.status }}",
+            "Technician": "={{ $json.technician }}",
+            "Created At": "={{ $('Edit Fields').item.json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Booking ID",
+              "displayName": "Booking ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer",
+              "displayName": "Customer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Package",
+              "displayName": "Package",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Technician",
+              "displayName": "Technician",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        -224
+      ],
+      "id": "d67dbdad-a0df-4193-b08d-8fa1cb02027e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets Trigger').item.json['Email Address'] }}",
+        "subject": "Your ISP Installation Has Been Scheduled",
+        "emailType": "text",
+        "message": "=Hello, {{ $('Google Sheets Trigger').item.json['Full Name'] }}\nYour internet installation has been booked successfully.Our Technician will contact you.\n\nBooking ID:{{ $('Code in JavaScript').item.json.bookingId }}\nTechnician:{{ $('Code in JavaScript').item.json.technician }}\nDate:{{ $('Code in JavaScript').item.json.date }}\nInternet Package:{{ $('Code in JavaScript').item.json.package }}\nTime:{{ $('Code in JavaScript').item.json.time }}\nTechnician Contact {{ $('Code in JavaScript').item.json.technicianPhone }}\n\nThank you for choosing us.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        -400
+      ],
+      "id": "30ac7ed9-a799-4a6d-8adb-9ffcf85484e3",
+      "name": "Send a message",
+      "webhookId": "30604d4c-dcf9-4c9d-a3e4-514faf90384c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kJ5VRfOEGis7XlrO",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Code in JavaScript').item.json.email }}",
+        "subject": "No Technician Available At Selected Time.",
+        "emailType": "text",
+        "message": "Hello,Unfortunately we do not have available technician at this time and location.Please try another date and location.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        128
+      ],
+      "id": "e5557b8f-a277-46ca-b6ef-80c59a9eb4c3",
+      "name": "Send a message1",
+      "webhookId": "91f6a05c-0ff3-485a-ba17-bc3dc0554879",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kJ5VRfOEGis7XlrO",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 924197971,
+          "mode": "list",
+          "cachedResultName": "form responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=924197971"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "631733ff-c969-404f-8204-1a242fa9af4a",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "N2zLQXHdHFynIfHh",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1549324994,
+          "mode": "list",
+          "cachedResultName": "technician schedule",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=1549324994"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        48
+      ],
+      "id": "bb6e7858-4b14-4879-b0c6-9d15059ac484",
+      "name": "technician schedule",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 92534784,
+          "mode": "list",
+          "cachedResultName": "technicians",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=92534784"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        -128
+      ],
+      "id": "b8e584b5-a3d9-4def-bccc-227b4c54841a",
+      "name": "technicians",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "eaac695f-c2f5-4190-b688-27d509315207",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1549324994,
+          "mode": "list",
+          "cachedResultName": "technician schedule",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=1549324994"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Booking ID": "={{ $('Edit Fields').item.json.bookingId }}",
+            "Technician": "={{ $json.Technician }}",
+            "Date": "={{ $json.Date }}",
+            "Time": "={{ $json.Time }}",
+            "Customer": "={{ $('Google Sheets Trigger').item.json['Full Name'] }}",
+            "Area": "={{ $('Google Sheets Trigger').item.json['Installation Area'] }}",
+            "Status": "={{ $('Code in JavaScript').item.json.status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Booking ID",
+              "displayName": "Booking ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Technician",
+              "displayName": "Technician",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer",
+              "displayName": "Customer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        960,
+        -320
+      ],
+      "id": "c6fbdd67-a34c-42b4-b27c-2e6722fd8edb",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 92534784,
+          "mode": "list",
+          "cachedResultName": "technicians",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=92534784"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Technician": "={{ $('Append row in sheet').item.json.Technician }}",
+            "Area": "={{ $('Append row in sheet').item.json.Area }}",
+            "Status": "={{ $('Code in JavaScript').item.json.status }}",
+            "Jobs Today": "={{ $('Code in JavaScript').item.json.jobsToday }}",
+            "Phone": "={{ $('Code in JavaScript').item.json.technicianPhone }}"
+          },
+          "matchingColumns": [
+            "Technician"
+          ],
+          "schema": [
+            {
+              "id": "Technician",
+              "displayName": "Technician",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Area",
+              "displayName": "Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Jobs Today",
+              "displayName": "Jobs Today",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        -400
+      ],
+      "id": "13ea0e45-fb28-4ef7-a65d-9d4042757bad",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw",
+          "mode": "list",
+          "cachedResultName": "installation bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 520451244,
+          "mode": "list",
+          "cachedResultName": "technician skills",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_4MALFxTbAdXuDBOm8zii9GD_eQGaNlxoioeDFeZuw/edit#gid=520451244"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        256
+      ],
+      "id": "576245c8-7a5d-4727-b1e6-7291e97b91ce",
+      "name": "Get technician skills",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "P7Wqh3nihO2zGpxc",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v21.0/1160392780485658/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"254115361894\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"jaspers_market_order_confirmation_v1\",\n    \"language\": { \"code\": \"en_US\" },\n    \"components\": [\n      {\n        \"type\": \"body\",\n        \"parameters\": [\n          { \"type\": \"text\", \"text\": \"John Doe\" },\n          { \"type\": \"text\", \"text\": \"123456\" },\n          { \"type\": \"text\", \"text\": \"Jul 16, 2026\" }\n        ]\n      }\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1296,
+        -32
+      ],
+      "id": "0611f902-b292-423c-8026-68c824d964e1",
+      "name": "whatsapp test",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "QJnhiftFXRR3nr2Z",
+          "name": "Header Auth account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "technicians",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "technician schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "technician schedule": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "technicians": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get technician skills": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9d89a38d-d509-4209-9d7c-ed5618fba0e9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "920996b32fa84db92cd18c357251a9e5896bf75dd636b9202f98e4fb948c68c4"
+  },
+  "nodeGroups": [],
+  "id": "JJeheUbmaPuZMO8v",
+  "tags": []
+}
