@@ -483,16 +483,13 @@ The system is designed around one principle:
 ---
 
 ## 📸 Project Preview
+## 📸 Project Preview
 
-*Add your workflow screenshot here.*
+### n8n Automation Workflow
 
-Example:
-
-```markdown
 ![ISP Appointment Booking Automation](isp-booking.png)
-```
 
----
+The workflow automates the appointment booking process from customer submission through booking validation, technician scheduling, and automated customer notification.
 
 ## 👨‍💻 Project Type
 
