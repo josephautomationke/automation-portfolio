@@ -5,7 +5,6 @@ I build AI-powered automation systems using n8n to help businesses automate oper
 ---
 
 ## 🚀 Featured Projects
-## 🚀 Featured Projects
 
 ### 1. 🌐isp-appointment-booking
 
