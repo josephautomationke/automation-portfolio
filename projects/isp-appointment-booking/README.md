@@ -1,4 +1,23 @@
+
 # 🌐 ISP Appointment Booking & Technician Scheduling System
+
+> **Automate customer bookings. Schedule technicians. Reduce missed appointments. Improve the customer experience.**
+
+<p align="center">
+  <img src="isp-booking.png" alt="ISP Appointment Booking Automation Workflow" width="100%">
+</p>
+
+---
+
+## 🚀 What Is This?
+
+An automated ISP appointment booking and technician scheduling system designed to help Internet Service Providers streamline the process from customer booking to technician assignment and customer notification.
+
+The system combines **n8n, Node.js, Google Forms, Google Sheets, Gmail, and automation logic**, with the option to extend customer communication through **WhatsApp integration**.
+
+Instead of relying on manual spreadsheets, phone calls, and repetitive coordination, the system creates an automated workflow that helps an ISP process appointments faster and more reliably.
+
+---
 
 > **Automate customer bookings. Schedule technicians intelligently. Reduce missed appointments. Give your ISP team complete visibility.**
 
@@ -469,25 +488,6 @@ Instead of employees manually coordinating:
 the system creates a connected workflow where each stage can trigger the next automatically.
 
 That means the ISP can focus more on **serving customers and growing the business**, while repetitive administrative processes are handled automatically.
-
----
-
-# 🏆 Project Objective
-
-The long-term objective is to create a modular automation platform capable of supporting ISPs from their first customers to thousands of subscribers.
-
-The system is designed around one principle:
-
-> **Automate repetitive operations, give staff better visibility, and create a faster experience for customers.**
-
----
-
-## 📸 Project Preview
-## 📸 Project Preview
-
-### n8n Automation Workflow
-
-![ISP Appointment Booking Automation](isp-booking.png)
 
 The workflow automates the appointment booking process from customer submission through booking validation, technician scheduling, and automated customer notification.
 
