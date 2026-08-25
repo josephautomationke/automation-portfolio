@@ -7,7 +7,7 @@ I build AI-powered automation systems using n8n to help businesses automate oper
 ## 🚀 Featured Projects
 ## 🚀 Featured Projects
 
-### 1. 🌐 ISP Appointment Booking & Technician Scheduling System
+### 1. 🌐isp-appointment-booking
 
 **Automated appointment booking and technician scheduling system built for Internet Service Providers.**
 
@@ -26,7 +26,7 @@ This system helps ISPs automate the journey from **customer appointment request 
 
 **Built with:** n8n • Node.js • Google Forms • Google Sheets • Gmail • JavaScript
 
-👉 [View ISP Booking & Technician Scheduling System](projects/isp-appointment-booking/)
+👉 [Viewisp-appointment-booking](projects/isp-appointment-booking/)
 
 ---
 
